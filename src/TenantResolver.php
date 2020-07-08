@@ -105,7 +105,6 @@ class TenantResolver
                 $tenant = $model
                     ->where('subdomain', '=', $domain)
                     ->orWhere('alias_domain', '=', $domain)
-                    ->orWhere('id', '=', $domain)
                     ->first();
             }
             catch (\Exception $e)
@@ -127,12 +126,6 @@ class TenantResolver
                 {
                     $query->where('subdomain', '=', $subdomain);
                     $query->orWhere('alias_domain', '=', $domain);
-                })
-                ->orWhere(function($query) use ($id)
-                {
-                    $query->whereNull('subdomain');
-                    $query->whereNull('alias_domain');
-                    $query->where('id', $id);
                 })
                 ->first();
         }
