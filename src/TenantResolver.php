@@ -1,21 +1,21 @@
 <?php
 namespace DanTheDJ\MultiTenant;
 
-use Illuminate\Console\Events\ArtisanStarting;
-use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
+use Illuminate\Foundation\Application;
 use Symfony\Component\Console\ConsoleEvents;
-use Symfony\Component\Console\Event\ConsoleCommandEvent;
-use Symfony\Component\Console\Event\ConsoleExceptionEvent;
-use Symfony\Component\Console\Event\ConsoleTerminateEvent;
+use Illuminate\Console\Events\ArtisanStarting;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\EventDispatcher\EventDispatcher;
-use DanTheDJ\MultiTenant\Events\TenantActivatedEvent;
-use DanTheDJ\MultiTenant\Events\TenantResolvedEvent;
-use DanTheDJ\MultiTenant\Events\TenantNotResolvedEvent;
-use DanTheDJ\MultiTenant\Events\TenantNotResolvedException;
 use DanTheDJ\MultiTenant\Contracts\TenantContract;
+use DanTheDJ\MultiTenant\Events\TenantResolvedEvent;
+use DanTheDJ\MultiTenant\Events\TenantActivatedEvent;
+use Symfony\Component\Console\Event\ConsoleErrorEvent;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use DanTheDJ\MultiTenant\Events\TenantNotResolvedEvent;
+use Symfony\Component\Console\Event\ConsoleCommandEvent;
+use Symfony\Component\Console\Event\ConsoleTerminateEvent;
+use DanTheDJ\MultiTenant\Events\TenantNotResolvedException;
 
 class TenantResolver
 {
@@ -297,11 +297,11 @@ class TenantResolver
                         }
                         catch (\Exception $e)
                         {
-                            $event = new ConsoleExceptionEvent($command, $input, $output, $e, $e->getCode());
+                            $event = new ConsoleErrorEvent($input, $output, $e, $command);
 
-                            $this->getConsoleDispatcher()->dispatch(ConsoleEvents::EXCEPTION, $event);
+                            $this->getConsoleDispatcher()->dispatch(ConsoleEvents::ERROR, $event);
 
-                            $e = $event->getException();
+                            $e = $event->getError();
 
                             throw $e;
                         }
