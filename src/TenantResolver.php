@@ -299,7 +299,7 @@ class TenantResolver
                         {
                             $event = new ConsoleErrorEvent($input, $output, $e, $command);
 
-                            $this->getConsoleDispatcher()->dispatch(ConsoleEvents::ERROR, $event);
+                            $this->getConsoleDispatcher()->dispatch($event);
 
                             $e = $event->getError();
 
